@@ -41,6 +41,9 @@ var locations = [
 resource cosmosDbAccount 'Microsoft.DocumentDB/databaseAccounts@2023-04-15' = {
   name: cosmosDbName
   location: location
+  tags: {
+    SecurityControl: 'Ignore'
+  }
   identity: {
     type: 'SystemAssigned'
   }
@@ -57,6 +60,7 @@ resource cosmosDbAccount 'Microsoft.DocumentDB/databaseAccounts@2023-04-15' = {
     databaseAccountOfferType: 'Standard'
     locations: locations
     disableLocalAuth: false
+    publicNetworkAccess: 'Enabled'
   }
 }
 
@@ -75,18 +79,26 @@ resource cosmosDbDatabase 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases@20
 resource storageAccount 'Microsoft.Storage/storageAccounts@2023-01-01' = {
   name: storageAccountName
   location: location
+  tags: {
+    SecurityControl: 'Ignore'
+  }
   sku: {
     name: 'Standard_LRS'
   }
   kind: 'StorageV2'
   properties: {
     accessTier: 'Hot'
+    allowSharedKeyAccess: true
+    publicNetworkAccess: 'Enabled'
   }
 }
 
 resource aiFoundry 'Microsoft.CognitiveServices/accounts@2025-04-01-preview' = {
   name: aiFoundryName
   location: location
+  tags: {
+    SecurityControl: 'Ignore'
+  }
   identity: {
     type: 'SystemAssigned'
   }
@@ -102,6 +114,7 @@ resource aiFoundry 'Microsoft.CognitiveServices/accounts@2025-04-01-preview' = {
     customSubDomainName: aiFoundryName
 
     disableLocalAuth: false
+    publicNetworkAccess: 'Enabled'
   }
 }
 
@@ -271,4 +284,3 @@ output storageAccountName string = storageAccount.name
 output container_registry_name string = containerRegistry.name
 output application_name string = appServiceApp.name
 output application_url string = appServiceApp.properties.hostNames[0]
-
